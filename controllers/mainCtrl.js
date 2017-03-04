@@ -14,9 +14,24 @@ module.exports = {
   },
 
   getOccupations: function(req,res) {
-    res.status(200).send({
-      "occupations": user.occupations
-    })
+    var query = req.query.order;
+    var results = user.occupations;
+    switch(query) {
+      case 'desc':
+        res.status(200).send({
+          "occupations": results.sort()
+        })
+        break;
+      case 'asc':
+        res.status(200).send({
+          "occupations": results.reverse()
+        })
+        break;
+      default:
+      res.status(200).send({
+        "occupations": results
+      })
+    }
   },
 
   getLatest: function(req,res) {
@@ -79,6 +94,41 @@ module.exports = {
     res.status(200).send({
       restaurants: results
     })
-  }
+  },
+
+  putName: function(req, res) {
+    user.name = req.body.name;
+    res.status(200).send({
+      updated: user.name
+    })
+  },
+
+  putLocation: function(req, res) {
+    console.log(req.body.location)
+    if (req.body.location) {
+      user.location = req.body.location;
+    }
+    res.status(200).send(user)
+  },
+
+  postHobbies: function (req, res) {
+    user.hobbies.push(req.body);
+    res.status(200).send(user.hobbies)
+  },
+
+  postOccupations: function (req, res) {
+    user.occupations.push(req.body);
+    res.status(200).send(user.occupations)
+  },
+
+  postFamily: function (req, res) {
+    user.family.push(req.body);
+    res.status(200).send(user.family)
+  },
+
+  postRestaurants: function (req, res) {
+    user.restaurants.push(req.body);
+    res.status(200).send(user.restaurants)
+  },
 
 }
