@@ -1,6 +1,10 @@
 var user = require('../user.js')
+var skillz = require('../skillz.js');
+var secrets = require('../secrets.js')
 
 module.exports = {
+
+// GET REQUESTS //
   getName: function(req, res) {
     res.status(200).send({
       "name": user.name
@@ -96,6 +100,56 @@ module.exports = {
     })
   },
 
+  getSkillz: function (req, res) {
+    var expQuery = req.query.experience;
+    console.log(expQuery, req.query)
+    switch (expQuery) {
+      case 'Beginner':
+        var beginnerSkills = skillz.list.filter(function(value){
+          console.log(value.experience)
+          if (value.experience === expQuery) {
+            return value;
+          }
+        });
+        console.log(beginnerSkills)
+        res.status(200).send(beginnerSkills);
+        break;
+      case 'Intermediate':
+        res.status(200).send({
+          beginnerSkills: skillz.list.filter(function(value){
+            if (value.experience === expQuery) {
+              return value;
+            }
+          })
+        })
+        break;
+      case 'Expert':
+        res.status(200).send({
+          beginnerSkills: skillz.list.filter(function(value){
+            if (value.experience === expQuery) {
+              return value;
+            }
+          })
+        })
+        break;
+      default:
+      res.status(200).send({
+        skills: skillz.list
+      })
+    }
+  },
+
+  getSecrets: function (req, res) {
+    console.log(2)
+    res.status(200).send({
+      secrets: secrets.secrets
+    })
+  },
+
+
+
+  //PUT REQUESTS //
+
   putName: function(req, res) {
     user.name = req.body.name;
     res.status(200).send({
@@ -110,6 +164,8 @@ module.exports = {
     }
     res.status(200).send(user)
   },
+
+  // POST REQUESTS //
 
   postHobbies: function (req, res) {
     user.hobbies.push(req.body);
@@ -130,5 +186,10 @@ module.exports = {
     user.restaurants.push(req.body);
     res.status(200).send(user.restaurants)
   },
+
+  postSkill: function(req, res) {
+    skillz.list.push(req.body);
+    res.status(200).send(skillz.list)
+  }
 
 }
